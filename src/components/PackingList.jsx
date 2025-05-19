@@ -121,25 +121,34 @@ export default function PackingChecklist() {
   ];
 
   // State management
-  const [categories, setCategories] = useState(() => {
-    try {
-      const savedCategories = localStorage.getItem('packingListCategories');
-      return savedCategories ? JSON.parse(savedCategories) : defaultCategories;
-    } catch (error) {
-      console.error("Error loading categories:", error);
-      return defaultCategories;
-    }
-  });
+  const [categories, setCategories] = useState(defaultCategories);
   
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newItemName, setNewItemName] = useState('');
   const [addingItemToCategoryId, setAddingItemToCategoryId] = useState(null);
-  const [listName, setListName] = useState(() => {
-    return localStorage.getItem('packingListName') || 'VOYAGE OS';
-  });
+  const [listName, setListName] = useState('VOYAGE OS');
   const [editingListName, setEditingListName] = useState(false);
   const [progress, setProgress] = useState(0);
-
+  useEffect(() => {
+    try {
+        const savedListName = localStorage.getItem('packingListName');
+        if (savedListName) {
+        setListName(savedListName);
+        }
+    } catch (error) {
+        console.error("Error loading list name:", error);
+    }
+    }, []);
+    useEffect(() => {
+    try {
+        const savedCategories = localStorage.getItem('packingListCategories');
+        if (savedCategories) {
+        setCategories(JSON.parse(savedCategories));
+        }
+    } catch (error) {
+        console.error("Error loading categories:", error);
+    }
+    }, []);
   // Save to localStorage whenever categories or list name changes
   useEffect(() => {
     try {
